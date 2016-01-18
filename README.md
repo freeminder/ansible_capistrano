@@ -4,8 +4,6 @@
 
 * Ansible version >= 2.0
 
-* [Phusion Passenger](https://www.phusionpassenger.com/library/install/nginx/install/oss/trusty/) or similar application server 
-
 ## Configuration
 
 group_vars/all.yml should exist and contain:
