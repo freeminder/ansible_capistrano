@@ -1,6 +1,12 @@
 ---
 
 - hosts: all
-  gather_facts: no
+  become: true
+  gather_facts: false
+  pre_tasks:
+  - name: 'FIX: Ubuntu 16.04 LTS does not come with certain modules required by Ansible'
+    raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal aptitude)"
+    register: output
+    changed_when: output.stdout != ""
   roles:
     - { role: 'common', tags: ['common'] }

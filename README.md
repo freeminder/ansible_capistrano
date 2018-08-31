@@ -26,12 +26,13 @@ group_vars/all.yml should exist and contain:
     passenger_key_server: "hkp://keyserver.ubuntu.com:80"
     passenger_key_id: "561F9B9CAC40B2F7"
 
-    ubuntu_release: trusty
+    ubuntu_release: xenial
 
     mysql_root_password: 'your_password'
 
-    app_dir: '/srv/www/your_webapp'
-    src_dir: '/home/user/path/to/your_webapp_src'
+    app_name: 'your_webapp'
+    app_dir_root: '/var/www/ror/'
+    src_dir_root: '/home/user/path/to/your_webapp_src'
 
 
 ## Run instructions
