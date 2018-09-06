@@ -6,34 +6,7 @@
 
 ## Configuration
 
-group_vars/all.yml should exist and contain:
-
-    ---
-
-    common_packages:
-      - sudo
-      - htop
-      - mc
-      - curl
-      - wget
-      - git
-      - apt-transport-https
-      - ca-certificates
-      - gnupg2
-      - libmysqlclient-dev
-      - python-setuptools # easy_install (necessary for install python pip)
-
-    passenger_key_server: "hkp://keyserver.ubuntu.com:80"
-    passenger_key_id: "561F9B9CAC40B2F7"
-
-    ubuntu_release: xenial
-
-    mysql_root_password: 'your_password'
-
-    app_name: 'your_webapp'
-    app_dir_root: '/var/www/ror/'
-    src_dir_root: '/home/user/path/to/your_webapp_src'
-
+Remove extenstion '.example' from group_vars/all.yml.example and edit its contents for your own usage.
 
 ## Run instructions
 

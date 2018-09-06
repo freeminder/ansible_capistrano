@@ -8,10 +8,18 @@
     groups: 'www-data,rvm'
     append: yes
 
-- name: install public key for deploy user
+- name: installs public key for deploy user
   authorized_key:
     user: deploy
-    key: "{{ lookup('file', '/Users/dmitry/.ssh/id_rsa.pub') }}"
+    key: "{{ lookup('file', '{{ssh_public_key}}') }}"
+
+- name: installs private key for deploy user to be used for Capistrano to pull source code from git repo
+  copy: 
+    src: "{{ ssh_private_key }}" 
+    dest: "/home/deploy/.ssh/id_rsa"
+    mode: 0600
+    owner: deploy
+
 
 - name: creates webapp directories for deployment
   file: 
