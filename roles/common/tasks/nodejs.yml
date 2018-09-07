@@ -1,0 +1,15 @@
+---
+# Node.js deployment
+
+- name: get nodejs repo
+  get_url: url=https://deb.nodesource.com/setup_8.x dest=/tmp/nodejs_setup_8.x mode=0440
+
+- name: add nodejs repo
+  command: /bin/bash /tmp/nodejs_setup_8.x
+  become: true
+
+- name: install nodejs
+  apt: 
+    name: 'nodejs'
+    update_cache: 'yes'
+    cache_valid_time: 0

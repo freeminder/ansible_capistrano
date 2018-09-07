@@ -1,0 +1,32 @@
+---
+# install rvm
+
+- name: ensure that GPG key for RVM is installed
+  command: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+  args:
+    creates: /root/.gnupg/secring.gpg
+
+- name: ensure that RVM is installed
+  shell: '\curl -sSL https://get.rvm.io | bash -s stable --ruby'
+  args:
+    creates: /usr/local/rvm
+
+- name: install desired ruby version
+  shell: 'source /usr/local/rvm/scripts/rvm && exec rvm install "{{ruby_version}}"'
+  args:
+    executable: /bin/bash
+
+- name: use desired ruby version by default
+  shell: 'source /usr/local/rvm/scripts/rvm && exec rvm use {{ruby_version}} --default'
+  args:
+    executable: /bin/bash
+
+- name: set permissions to install gems by any user in rvm group
+  command: '{{ item }}'
+  become: true
+  register: perm_change 
+  changed_when: perm_change.stdout 
+  with_items:
+    - 'chown -R :rvm /usr/local/rvm/'
+    - 'chmod -R g+w /usr/local/rvm/'
+

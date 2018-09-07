@@ -2,7 +2,7 @@
     listen       80;
     server_name  _;
 
-    root {{ app_dir_root }}/{{ app_name }}/current/public;
+    root {{app_dir}}/current/public;
     client_max_body_size 128M;
     passenger_enabled on;
     passenger_ruby /usr/local/rvm/wrappers/default/ruby;

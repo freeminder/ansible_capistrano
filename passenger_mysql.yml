@@ -10,3 +10,5 @@
     changed_when: output.stdout != ""
   roles:
     - { role: 'common', tags: ['common'] }
+    - { role: 'passenger', tags: ['passenger'] }
+    - { role: 'mysql', tags: ['mysql'] }

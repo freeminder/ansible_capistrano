@@ -1,0 +1,25 @@
+---
+# nginx with phusion passenger
+- name: adds new gpg key for phusion passenger
+  apt_key:
+    keyserver: '{{ passenger_key_server }}'
+    id: '{{ passenger_key_id }}'
+    state: present
+
+- name: configures apt sources for phusion passenger installation
+  template: 
+    src: 'passenger.list.j2'
+    dest: '/etc/apt/sources.list.d/passenger.list'
+    owner: root
+    group: root
+
+- name: installs nginx with phusion passenger
+  apt:
+    name: '{{ item }}'
+    update_cache: yes
+    cache_valid_time: 0
+  with_items:
+    - nginx-extras
+    - passenger
+
+- include: nginx.yml

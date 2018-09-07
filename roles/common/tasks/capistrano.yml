@@ -1,29 +1,28 @@
 ---
 # Capistrano deployment
 
-- name: creates deploy user
+- name: create deploy user
   user: 
     name: deploy
     password: '$1$zXNyUjfV$JU.t4NkqTaZfrMFKuhImU0'
     groups: 'www-data,rvm'
     append: yes
 
-- name: installs public key for deploy user
+- name: install public key for deploy user
   authorized_key:
     user: deploy
     key: "{{ lookup('file', '{{ssh_public_key}}') }}"
 
-- name: installs private key for deploy user to be used for Capistrano to pull source code from git repo
+- name: install private key for deploy user to be used for Capistrano to pull source code from git repo
   copy: 
-    src: "{{ ssh_private_key }}" 
+    src: "{{ssh_private_key}}" 
     dest: "/home/deploy/.ssh/id_rsa"
     mode: 0600
     owner: deploy
 
-
-- name: creates webapp directories for deployment
+- name: create webapp directories for deployment
   file: 
-    path: '{{ app_dir_root }}/{{ app_name }}/{{ item }}'
+    path: '{{app_dir}}/{{item}}'
     state: directory
     owner: 'deploy'
     group: 'www-data'
@@ -31,20 +30,55 @@
   with_items:
     - shared/bin
     - shared/config
+    - shared/config/puma
     - shared/log
     - shared/tmp
     - releases
 
-- name: copies webapp private configs
+- name: copy webapp private configs
   become: true
   copy:
     owner: deploy
     group: www-data
     mode: 0640
-    src: '{{ src_dir_root }}/{{ app_name }}/config/{{ item.src }}'
-    dest: '{{ app_dir_root }}/{{ app_name }}/shared/config/{{ item.dest }}'
+    src: '{{src_dir}}/config/{{item.src}}'
+    dest: '{{app_dir}}/shared/config/{{item.dest}}'
   with_items:
     - { src: 'database.yml', dest: 'database.yml' }
     - { src: 'local_env.yml', dest: 'local_env.yml' }
     - { src: 'secrets.yml', dest: 'secrets.yml' }
+
+# - name: copy webapp private configs - database.yml
+#   template:
+#     src: 'database.yml.j2'
+#     dest: '{{app_dir}}/shared/config/database.yml'
+#     force: yes
+#     mode: 0640
+#     owner: 'deploy'
+#     group: 'www-data'
+
+# - name: copy webapp private configs - secrets.yml
+#   template:
+#     src: 'secrets.yml.j2'
+#     dest: '{{app_dir}}/shared/config/secrets.yml'
+#     force: yes
+#     mode: 0640
+#     owner: 'deploy'
+#     group: 'www-data'
+
+# - name: copy webapp private configs - secrets.yml.enc
+#   template:
+#     src: 'secrets.yml.enc.j2'
+#     dest: '{{app_dir}}/shared/config/secrets.yml.enc'
+#     force: yes
+#     mode: 0640
+#     owner: 'deploy'
+#     group: 'www-data'
+
+- name: install bundler
+  shell: 'source /usr/local/rvm/scripts/rvm && rvm use {{ruby_version}} && gem install bundler'
+  become: true
+  become_user: deploy
+  args:
+    executable: /bin/bash
 

@@ -10,7 +10,6 @@ common_packages:
   - apt-transport-https
   - ca-certificates
   - gnupg2
-  - libmysqlclient-dev
   - python-setuptools # easy_install (necessary for install python pip)
 
 
@@ -24,10 +23,14 @@ ssh_public_key:  /Users/dmitry/.ssh/id_rsa.pub
 # private key for deploy user to be used for Capistrano to pull source code from git repo
 ssh_private_key: /Users/dmitry/.ssh/id_rsa
 
-mysql_root_password: 'your_password'
-
 app_name: 'ZetaCloud'
-app_dir_root: '/var/www/ror'
-src_dir_root: '/Users/dmitry/Documents/devel'
+app_dir: '/var/www/ror/{{app_name}}'
+src_dir: '/Users/dmitry/Documents/devel/{{app_name}}'
 webserver_name: demo.zetacloud.ru
 ruby_version: 'ruby-2.5.1'
+
+## db creds
+mysql_root_password: 'mysqlsupersecretpassword'
+dbname: mysuperdb
+dbuser: superuser
+dbpassword: mysupersecretpassword

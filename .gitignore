@@ -1,2 +1,4 @@
 /group_vars/all.yml
+/roles/common/templates/secrets.yml.enc.j2
+/roles/common/templates/secrets.yml.j2
 /Dockerfile

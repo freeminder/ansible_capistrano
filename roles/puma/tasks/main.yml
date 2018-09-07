@@ -1,0 +1,30 @@
+---
+# puma
+
+- name: install puma
+  shell: 'source /usr/local/rvm/scripts/rvm && rvm use {{ruby_version}} && gem install puma'
+  become: true
+  become_user: deploy
+  args:
+    executable: /bin/bash
+
+- name: add puma config
+  template: src=etc_puma.conf.j2 dest=/etc/puma.conf force=yes mode=644
+  tags: puma
+
+- name: add puma systemd script
+  template: src=puma.service.j2 dest=/etc/systemd/system/puma.service force=yes mode=644
+  tags: puma
+
+- name: add puma shared/config
+  template: src=puma_production.j2 dest={{app_dir}}/shared/config/puma/production.rb force=yes mode=644
+  tags: puma
+
+- name: make shared/tmp/sockets
+  file: path={{app_dir}}/shared/tmp/sockets group=deploy owner=deploy state=directory
+  tags: tmp
+
+- name: restart puma
+  action: service name=puma state=restarted
+
+- include: nginx.yml
